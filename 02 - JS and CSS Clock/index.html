@@ -1,122 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>JS + CSS Clock</title>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <title>JS + CSS Clock</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
 
+        <div class="clock">
+            <div class="clock-face">
+                <div class="hand hour-hand"></div>
+                <div class="hand min-hand"></div>
+                <div class="hand second-hand"></div>
+            </div>
+        </div>
 
-    <div class="clock">
-      <div class="clock-face">
-        <div class="hand hour-hand"></div>
-        <div class="hand min-hand"></div>
-        <div class="hand second-hand"></div>
-      </div>
-    </div>
+        <script>
 
+            // Declare our hands
+            const secondHand = document.querySelector(".second-hand");
+            const minuteHand = document.querySelector(".min-hand");
+            const hourHand = document.querySelector(".hour-hand");
 
-  <style>
-    html {
-      background: #018DED url(https://unsplash.it/1500/1000?image=881&blur=50);
-      background-size: cover;
-      font-family: 'helvetica neue';
-      text-align: center;
-      font-size: 10px;
-    }
+            function setDate() {
+                const now = new Date();
 
-    body {
-      margin: 0;
-      font-size: 2rem;
-      display: flex;
-      flex: 1;
-      min-height: 100vh;
-      align-items: center;
-    }
+                const seconds = now.getSeconds();
+                const secondsDegrees = ((seconds / 60) * 360) + 90; // turn our seconds into degrees to then use on transforms
 
-    .clock {
-      width: 30rem;
-      height: 30rem;
-      border: 20px solid white;
-      border-radius: 50%;
-      margin: 50px auto;
-      position: relative;
-      padding: 2rem;
-      box-shadow:
-        0 0 0 4px rgba(0,0,0,0.1),
-        inset 0 0 0 3px #EFEFEF,
-        inset 0 0 10px black,
-        0 0 10px rgba(0,0,0,0.2);
-    }
+                const minutes = now.getMinutes();
+                const minutesDegrees = ((minutes / 60) * 360) + 90;
 
-    .clock-face {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      transform: translateY(-3px); /* account for the height of the clock hands */
-    }
+                const hours = now.getHours();
+                const hoursDegrees = ((hours / 12) * 360) + 90;
 
-    .hand {
-      width: 50%;
-      height: 6px;
-      background: black;
-      position: absolute;
-      top: 50%;
-      transform-origin: 100%; // makes our rotation happen from the far ride of the hand...or the center of the clock
-      transform: rotate(90deg); // start at 12
-      transition: all 0.2s;
-      transition-timing-fucntion: cubic-bezier(0.1, 5, 0.5, 1); // creates the tick effect by having it go over its bound and then snap back into position
-    }
-  </style>
+                secondHand.style.transform = `rotate(${secondsDegrees}deg)`; // ES6 literal to add the transform
+                minuteHand.style.transform = `rotate(${minutesDegrees}deg)`;
+                hourHand.style.transform = `rotate(${hoursDegrees}deg)`;
 
-  <script>
+                // Turn off transition when rotating from near 360 degrees back to 0 degrees at 12 o'clock. Otherwise the hand would go backwards.
+                if (seconds == 0) {
+                    secondHand.style.transition = "none";
+                } else {
+                    secondHand.style.transition = "all 0.2s";
+                }
 
-    // Declare our hands
-    const secondHand = document.querySelector(".second-hand");
-    const minuteHand = document.querySelector(".min-hand");
-    const hourHand = document.querySelector(".hour-hand");
+                if (minutes == 0) {
+                    minuteHand.style.transition = "none";
+                } else {
+                    minuteHand.style.transition = "all 0.2s";
+                }
 
-    function setDate() {
-      const now = new Date();
-      
-      const seconds = now.getSeconds();
-      const secondsDegrees = ((seconds / 60)*360) + 90; // turn our seconds into degrees to then use on transforms
-      
-      const minutes = now.getMinutes();
-      const minutesDegrees = ((minutes / 60)*360) + 90;
-      
-      const hours = now.getHours();
-      const hoursDegrees = ((hours / 12)*360) + 90;
-      
-      secondHand.style.transform = `rotate(${secondsDegrees}deg)`; // ES6 literal to add the transform
-      minuteHand.style.transform = `rotate(${minutesDegrees}deg)`;
-      hourHand.style.transform = `rotate(${hoursDegrees}deg)`;
-      
-      // Turn off transition when rotating from near 360 degrees back to 0 degrees at 12 o'clock. Otherwise the hand would go backwards.
-      if (seconds == 0) {
-        secondHand.style.transition = "none";
-      }
-      else {
-        secondHand.style.transition = "all 0.2s";
-      }
-      
-      if (minutes == 0) {
-        minuteHand.style.transition = "none";
-      }
-      else {
-        minuteHand.style.transition = "all 0.2s";
-      }
-      
-      if (hours == 12) {
-        hourHand.style.transition = "none";
-      }
-      else {
-        hourHand.style.transition = "all 0.2s";
-      }
-    }
+                if (hours == 12) {
+                    hourHand.style.transition = "none";
+                } else {
+                    hourHand.style.transition = "all 0.2s";
+                }
+            }
 
-    setInterval(setDate, 1000); // run the function every second
-
-  </script>
-</body>
+            setInterval(setDate, 1000); // run the function every second
+        </script>
+    </body>
 </html>
